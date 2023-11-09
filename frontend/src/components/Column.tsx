@@ -1,23 +1,53 @@
 import React from "react";
+import Item from "./Item";
+import { Droppable } from "react-beautiful-dnd";
+import { styled } from '@stitches/react';
 
 interface ColumnProps {
-    title: string;
-    tasks: string[];
+    col: {
+        id: string;
+        list: string[];
+    };
 }
 
-function Column({ title, tasks }: ColumnProps) {
+const StyledColumn = styled("div", {
+    padding: "24px 16px",
+    display: "flex",
+    flexDirection: "column",
+    marginTop: 8,
+
+    h2: {
+        margin: 0,
+        padding: "0 16px",
+    },
+});
+
+const StyledList = styled("div", {
+    backgroundColor: "#ddd",
+    borderRadius: 8,
+    padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+    marginTop: 8,
+});
+
+const Column: React.FC<ColumnProps> = ({ col: { list, id } }) => {
     return (
-        <div className="bg-white p-4 m-2 flex flex-col rounded-lg w-80">
-            <h2 className="text-lg font-semibold">{title}</h2>
-            <div className="mt-4 space-y-2">
-                {tasks.map((task, index) => (
-                    <div key={index} className="bg-gray-100 p-2 rounded">
-                        {task}
-                    </div>
-                ))}
-            </div>
-        </div>
+        <Droppable droppableId={id}>
+            {(provided) => (
+                <StyledColumn>
+                    <h2>{id}</h2>
+                    <StyledList {...provided.droppableProps} ref={provided.innerRef}>
+                        {list.map((text, index) => (
+                            <Item key={text} text={text} index={index} />
+                        ))}
+                        {provided.placeholder}
+                    </StyledList>
+                </StyledColumn>
+            )}
+        </Droppable>
     );
-}
+};
 
 export default Column;
