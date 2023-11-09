@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Column from "./components/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { styled } from '@stitches/react';
+import { styled } from "@stitches/react";
 
 const StyledColumns = styled("div", {
     display: "grid",

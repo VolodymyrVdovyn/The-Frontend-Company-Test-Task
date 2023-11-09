@@ -1,7 +1,7 @@
 import React from "react";
 import Item from "./Item";
 import { Droppable } from "react-beautiful-dnd";
-import { styled } from '@stitches/react';
+import { styled } from "@stitches/react";
 
 interface ColumnProps {
     col: {
