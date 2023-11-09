@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Column from "./components/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { styled } from "@stitches/react";
@@ -76,6 +76,20 @@ function App() {
             return null;
         }
     };
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch("/api");
+                const data = await response.json();
+                console.log(data.message);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        fetchData().then();
+    }, []);
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
