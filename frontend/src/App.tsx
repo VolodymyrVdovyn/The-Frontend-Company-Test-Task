@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Column from "./components/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { styled } from "@stitches/react";
+import { IColumn } from "./models";
 
 const StyledColumns = styled("div", {
     display: "grid",
@@ -11,6 +12,34 @@ const StyledColumns = styled("div", {
     height: "80vh",
     gap: "8px",
 });
+
+const initialCols = [
+    {
+        id: "todo",
+        cards: [
+            {
+                id: "item 1",
+                date: "2023-07-31T21:00:00.000Z",
+            },
+            {
+                id: "item 2",
+                date: "2023-08-15T21:00:00.000Z",
+            },
+            {
+                id: "item 3",
+                date: "2023-08-16T21:00:00.000Z",
+            },
+        ],
+    },
+    {
+        id: "doing",
+        cards: [],
+    },
+    {
+        id: "done",
+        cards: [],
+    },
+];
 
 function App() {
     const initialColumns = {
@@ -27,53 +56,23 @@ function App() {
             list: [],
         },
     };
-    const [columns, setColumns] = useState(initialColumns);
+    // const [columns, setColumns] = useState(initialColumns);
+    const [columns, setColumns] = useState<IColumn[]>(initialCols);
+    // const [columns, setColumns] = useState<IColumn[]>([]);
 
     const onDragEnd = ({ source, destination }: DropResult) => {
-        if (destination === undefined || destination === null) return null;
-
+        if (!destination) return null;
         if (source.droppableId === destination.droppableId && destination.index === source.index) return null;
 
-        // @ts-ignore
-        const start = columns[source.droppableId];
-        // @ts-ignore
-        const end = columns[destination.droppableId];
+        const newColumns = [...columns];
 
-        if (start === end) {
-            const newList = start.list.filter((_: any, idx: number) => idx !== source.index);
+        const sourceColumn = newColumns.find((column) => column.id === source.droppableId);
+        const destinationColumn = newColumns.find((column) => column.id === destination.droppableId);
 
-            newList.splice(destination.index, 0, start.list[source.index]);
-
-            const newCol = {
-                id: start.id,
-                list: newList,
-            };
-
-            setColumns((state) => ({ ...state, [newCol.id]: newCol }));
-            return null;
-        } else {
-            const newStartList = start.list.filter((_: any, idx: number) => idx !== source.index);
-
-            const newStartCol = {
-                id: start.id,
-                list: newStartList,
-            };
-
-            const newEndList = end.list;
-
-            newEndList.splice(destination.index, 0, start.list[source.index]);
-
-            const newEndCol = {
-                id: end.id,
-                list: newEndList,
-            };
-
-            setColumns((state) => ({
-                ...state,
-                [newStartCol.id]: newStartCol,
-                [newEndCol.id]: newEndCol,
-            }));
-            return null;
+        if (sourceColumn && destinationColumn) {
+            const movedCard = sourceColumn.cards.splice(source.index, 1)[0];
+            destinationColumn.cards.splice(destination.index, 0, movedCard);
+            setColumns(newColumns);
         }
     };
 
@@ -94,8 +93,8 @@ function App() {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <StyledColumns>
-                {Object.values(columns).map((col) => (
-                    <Column col={col} key={col.id} />
+                {columns.map((column) => (
+                    <Column column={column} key={column.id} />
                 ))}
             </StyledColumns>
         </DragDropContext>

@@ -2,12 +2,10 @@ import React from "react";
 import Item from "./Item";
 import { Droppable } from "react-beautiful-dnd";
 import { styled } from "@stitches/react";
+import { IColumn } from "../models";
 
 interface ColumnProps {
-    col: {
-        id: string;
-        list: string[];
-    };
+    column: IColumn;
 }
 
 const StyledColumn = styled("div", {
@@ -32,15 +30,15 @@ const StyledList = styled("div", {
     marginTop: 8,
 });
 
-const Column: React.FC<ColumnProps> = ({ col: { list, id } }) => {
+const Column: React.FC<ColumnProps> = ({ column: { cards, id } }) => {
     return (
         <Droppable droppableId={id}>
             {(provided) => (
                 <StyledColumn>
                     <h2>{id}</h2>
                     <StyledList {...provided.droppableProps} ref={provided.innerRef}>
-                        {list.map((text, index) => (
-                            <Item key={text} text={text} index={index} />
+                        {cards.map((card, index) => (
+                            <Item key={card.id} text={card.id} index={index} />
                         ))}
                         {provided.placeholder}
                     </StyledList>
