@@ -3,6 +3,7 @@ import Column from "./components/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { styled } from "@stitches/react";
 import { IColumn } from "./models";
+import { useColumnsApi } from "./hooks/columns";
 
 const StyledColumns = styled("div", {
     display: "grid",
@@ -13,52 +14,8 @@ const StyledColumns = styled("div", {
     gap: "8px",
 });
 
-const initialCols = [
-    {
-        id: "todo",
-        cards: [
-            {
-                id: "item 1",
-                date: "2023-07-31T21:00:00.000Z",
-            },
-            {
-                id: "item 2",
-                date: "2023-08-15T21:00:00.000Z",
-            },
-            {
-                id: "item 3",
-                date: "2023-08-16T21:00:00.000Z",
-            },
-        ],
-    },
-    {
-        id: "doing",
-        cards: [],
-    },
-    {
-        id: "done",
-        cards: [],
-    },
-];
-
 function App() {
-    const initialColumns = {
-        todo: {
-            id: "todo",
-            list: ["item 1", "item 2", "item 3"],
-        },
-        doing: {
-            id: "doing",
-            list: [],
-        },
-        done: {
-            id: "done",
-            list: [],
-        },
-    };
-    // const [columns, setColumns] = useState(initialColumns);
-    const [columns, setColumns] = useState<IColumn[]>(initialCols);
-    // const [columns, setColumns] = useState<IColumn[]>([]);
+    const { columns, setColumns } = useColumnsApi();
 
     const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return null;
@@ -75,20 +32,6 @@ function App() {
             setColumns(newColumns);
         }
     };
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch("http://localhost:8080/api");
-                const data = await response.json();
-                console.log(data.message);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-
-        fetchData().then();
-    }, []);
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
