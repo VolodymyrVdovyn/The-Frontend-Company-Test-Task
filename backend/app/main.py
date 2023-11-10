@@ -1,38 +1,23 @@
+# main.py
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
+import redis
 
 app = FastAPI()
 
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["*"],
-)
+# redis_client = redis.Redis(host="localhost", port=6379, db=0)
+redis_client = redis.Redis(host="redis-server", port=6379, db=0)
+
+# FastAPI endpoint to store data in Redis
+@app.post("/add_data/{key}/{value}")
+def add_data(key: str, value: str):
+    redis_client.set(key, value)
+    return {"message": "Data added successfully"}
 
 
-data = [
-    {
-        "id": "todo",
-        "cards": [
-            {"id": "item 1", "date": "2023-07-31T21:00:00.000Z"},
-            {"id": "back 222", "date": "2023-08-15T21:00:00.000Z"},
-        ],
-    },
-    {
-        "id": "doing",
-        "cards": [],
-    },
-    {
-        "id": "done",
-        "cards": [],
-    },
-]
-
-
-@app.get("/columns")
-async def root():
-    return {"data": data}
+# FastAPI endpoint to retrieve data from Redis
+@app.get("/get_data/{key}")
+def get_data(key: str):
+    value = redis_client.get(key)
+    if value is None:
+        return {"message": "Key not found"}
+    return {"key": key, "value": value.decode("utf-8")}
