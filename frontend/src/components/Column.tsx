@@ -1,5 +1,5 @@
 import React from "react";
-import Item from "./Item";
+import { Item } from "./Item";
 import { Droppable } from "react-beautiful-dnd";
 import { styled } from "@stitches/react";
 import { IColumn } from "../models";
@@ -30,14 +30,14 @@ const StyledList = styled("div", {
     marginTop: 8,
 });
 
-const Column: React.FC<ColumnProps> = ({ column: { cards, id } }) => {
+export function Column({ column }: ColumnProps) {
     return (
-        <Droppable droppableId={id}>
+        <Droppable droppableId={column.id}>
             {(provided) => (
                 <StyledColumn>
-                    <h2>{id}</h2>
+                    <h2>{column.id}</h2>
                     <StyledList {...provided.droppableProps} ref={provided.innerRef}>
-                        {cards.map((card, index) => (
+                        {column.cards.map((card, index) => (
                             <Item key={card.id} text={card.id} index={index} />
                         ))}
                         {provided.placeholder}
@@ -46,6 +46,4 @@ const Column: React.FC<ColumnProps> = ({ column: { cards, id } }) => {
             )}
         </Droppable>
     );
-};
-
-export default Column;
+}

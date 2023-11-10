@@ -20,7 +20,7 @@ const StyledItem = styled("div", {
     },
 });
 
-const Item: React.FC<ItemProps> = ({ text, index }) => {
+export function Item({ text, index }: ItemProps) {
     return (
         <Draggable draggableId={text} index={index}>
             {(provided) => (
@@ -30,6 +30,4 @@ const Item: React.FC<ItemProps> = ({ text, index }) => {
             )}
         </Draggable>
     );
-};
-
-export default Item;
+}
