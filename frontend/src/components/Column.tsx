@@ -15,7 +15,7 @@ export function Column({ column }: ColumnProps) {
                     <h2>{column.id}</h2>
                     <div className="content" {...provided.droppableProps} ref={provided.innerRef}>
                         {column.cards.map((card, index) => (
-                            <Card key={card.id} text={card.id} index={index} />
+                            <Card key={card.id} card={card} index={index} />
                         ))}
                         {provided.placeholder}
                     </div>

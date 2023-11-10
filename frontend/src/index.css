@@ -27,18 +27,24 @@
     flex-direction: column;
     flex-grow: 1;
     margin-top: 8px;
-
 }
 
 .card {
     background-color: #eee;
     border-radius: 4px;
     padding: 4px 8px;
-    transition: background-color .8s ease-out;
+    transition: background-color 0.8s ease-out;
     margin-top: 8px;
 }
 
 .card:hover {
     background-color: #fff;
-    transition: background-color .1s ease-in;
+    transition: background-color 0.1s ease-in;
+}
+
+.card .date {
+    font-size: 12px;
+    color: #999;
+    font-weight: bold;
+    margin-top: 4px;
 }
