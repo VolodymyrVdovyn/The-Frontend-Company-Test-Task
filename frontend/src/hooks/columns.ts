@@ -6,7 +6,7 @@ export function useColumnsApi() {
 
     async function fetchColumns() {
         try {
-            const response = await fetch("http://localhost:8080/columns");
+            const response = await fetch("http://localhost:8000/columns");
             const json = await response.json();
             setColumns(json.data);
         } catch (error) {

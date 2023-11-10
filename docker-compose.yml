@@ -7,6 +7,8 @@ services:
         restart: always
         ports:
             - "3000:3000"
+        networks:
+            - mynetwork
 
     python-app:
         build:
@@ -14,11 +16,17 @@ services:
             dockerfile: ./Dockerfile
         restart: always
         ports:
-            - "8080:8080"
-
-    dynamodb-local:
-        image: amazon/dynamodb-local
-        ports:
             - "8000:8000"
-        volumes:
-            - ./data:/data
+        networks:
+            - mynetwork
+
+    redis-server:
+        image: "redis:latest"
+        container_name: "redis-server"
+        ports:
+            - "6379:6379"
+        networks:
+            - mynetwork
+
+networks:
+  mynetwork:
