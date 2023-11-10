@@ -13,22 +13,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-data = {
-    "todo": {
+
+data = [
+    {
         "id": "todo",
-        "list": ["item 1", "item 2", "item 3"],
+        "cards": [
+            {"id": "item 1", "date": "2023-07-31T21:00:00.000Z"},
+            {"id": "back 222", "date": "2023-08-15T21:00:00.000Z"},
+        ],
     },
-    "doing": {
+    {
         "id": "doing",
-        "list": [],
+        "cards": [],
     },
-    "done": {
+    {
         "id": "done",
-        "list": [],
+        "cards": [],
     },
-}
+]
 
 
-@app.get("/api")
+@app.get("/columns")
 async def root():
-    return {"message": data}
+    return {"data": data}
