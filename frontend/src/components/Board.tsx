@@ -1,17 +1,7 @@
 import React from "react";
-import {Column} from "./Column";
+import { Column } from "./Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { styled } from "@stitches/react";
 import { useColumnsApi } from "../hooks/columns";
-
-const StyledColumns = styled("div", {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
-    margin: "10vh auto",
-    width: "80%",
-    height: "80vh",
-    gap: "8px",
-});
 
 export function Board() {
     const { columns, setColumns } = useColumnsApi();
@@ -34,11 +24,11 @@ export function Board() {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <StyledColumns>
+            <div className="board">
                 {columns.map((column) => (
                     <Column column={column} key={column.id} />
                 ))}
-            </StyledColumns>
+            </div>
         </DragDropContext>
     );
 }

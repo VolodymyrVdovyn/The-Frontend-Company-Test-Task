@@ -1,0 +1,44 @@
+.board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 10vh auto;
+    width: 80%;
+    height: 80vh;
+    gap: 8px;
+}
+
+.column {
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+}
+
+.column > h2 {
+    margin: 0;
+    padding: 0 16px;
+}
+
+.column .content {
+    background-color: #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-top: 8px;
+
+}
+
+.card {
+    background-color: #eee;
+    border-radius: 4px;
+    padding: 4px 8px;
+    transition: background-color .8s ease-out;
+    margin-top: 8px;
+}
+
+.card:hover {
+    background-color: #fff;
+    transition: background-color .1s ease-in;
+}
