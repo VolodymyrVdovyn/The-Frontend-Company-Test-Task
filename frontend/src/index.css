@@ -49,10 +49,9 @@
     margin-top: 4px;
 }
 
-.save-button {
+.button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #4caf50;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -61,12 +60,26 @@
     text-align: center;
     text-decoration: none;
     transition: background-color 0.3s ease;
+    margin: 5px;
 }
 
-.save-button:hover {
+.button:hover {
     background-color: #45a049;
 }
 
-.save-button:focus {
+.button:focus {
     outline: none;
+}
+
+.button.create {
+    background-color: #0074d9;
+}
+
+.button.save {
+    background-color: #4caf50;
+}
+
+.input {
+    padding: 10px 20px;
+    font-size: 16px;
 }
