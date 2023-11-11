@@ -1,14 +1,11 @@
 import json
 
-import redis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from database import KEY, init_redis_db, redis_client
 
-KEY = "the-frontend-company-data"
-redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
-# redis_client = redis.Redis(host="redis-server", port=6379, db=0, decode_responses=True)
+app = FastAPI()
 
 
 app.add_middleware(
@@ -18,12 +15,6 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
-
-
-def init_redis_db():
-    data = [{"id": "todo", "cards": []}, {"id": "doing", "cards": []}, {"id": "done", "cards": []}]
-    redis_client.set(KEY, json.dumps(data))
-    return {"key": KEY, "value": data}
 
 
 @app.get("/get_data")
