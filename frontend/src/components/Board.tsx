@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Column } from "./Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { useColumnsApi } from "../hooks/columns";
+import { BoardContext } from "../context/BoardContext";
 
 export function Board() {
-    const { columns, setColumns, saveColumns } = useColumnsApi();
     const [cardText, setCardText] = useState("");
+    const { columns, setColumns, saveColumns, addCard } = useContext(BoardContext);
 
     const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return null;
@@ -23,48 +23,6 @@ export function Board() {
         }
     };
 
-    const addCard = () => {
-        const cardExists = columns.some((column) => column.cards.some((card) => card.id === cardText));
-        if (!cardExists && cardText) {
-            const newColumns = [...columns];
-            const todoColumn = newColumns.find((column) => column.id === "todo");
-            const newCard = {
-                id: cardText,
-                date: new Date().toISOString(),
-            };
-            if (todoColumn) {
-                todoColumn.cards.splice(0, 0, newCard);
-                setColumns(newColumns);
-            }
-        }
-    };
-
-    const removeCard = (cardId: string) => {
-        const newColumns = [...columns];
-
-        newColumns.forEach((column) => {
-            column.cards = column.cards.filter((card) => card.id !== cardId);
-        });
-
-        setColumns(newColumns);
-    };
-
-    const updateCard = (cardId: string, cardText: string) => {
-        const newColumns = [...columns];
-
-        newColumns.forEach((column) => {
-            column.cards = column.cards.map((card) => {
-                if (card.id === cardId) {
-                    return { ...card, id: cardText };
-                } else {
-                    return card;
-                }
-            });
-        });
-
-        setColumns(newColumns);
-    };
-
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <button className="button save" onClick={saveColumns}>
@@ -78,13 +36,13 @@ export function Board() {
                     onChange={(event) => setCardText(event.target.value)}
                     placeholder="Card text..."
                 />
-                <button className="button create" onClick={addCard}>
+                <button className="button create" onClick={() => addCard(cardText)}>
                     Create card
                 </button>
             </div>
             <div className="board">
                 {columns.map((column) => (
-                    <Column column={column} key={column.id} onRemove={removeCard} onUpdate={updateCard} />
+                    <Column column={column} key={column.id} />
                 ))}
             </div>
         </DragDropContext>
