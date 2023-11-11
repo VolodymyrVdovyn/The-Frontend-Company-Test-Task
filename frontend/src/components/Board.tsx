@@ -5,7 +5,7 @@ import { BoardContext } from "../context/BoardContext";
 
 export function Board() {
     const [cardText, setCardText] = useState("");
-    const { columns, setColumns, saveColumns, addCard } = useContext(BoardContext);
+    const { columns, setColumns, saveColumns, addCard, isColumnsChanged } = useContext(BoardContext);
 
     const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return null;
@@ -25,7 +25,12 @@ export function Board() {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <button className="button save" onClick={saveColumns}>
+            <button
+                className="button"
+                onClick={saveColumns}
+                disabled={isColumnsChanged()}
+                style={{ backgroundColor: isColumnsChanged() ? "grey" : "green" }}
+            >
                 Save
             </button>
             <div>

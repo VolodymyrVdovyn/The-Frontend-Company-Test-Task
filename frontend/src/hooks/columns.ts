@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IColumn } from "../models";
 
 export function useColumnsApi() {
     const [columns, setColumns] = useState<IColumn[]>([]);
+    const defaultColumnsString = useRef<string>("[]");
 
     async function fetchColumns() {
         try {
             const response = await fetch("http://localhost:8000/get_data");
             const json = await response.json();
             setColumns(json.value);
+            defaultColumnsString.current = JSON.stringify(json.value);
         } catch (error) {
             console.error("Error fetching columns data:", error);
         }
@@ -24,17 +26,16 @@ export function useColumnsApi() {
         };
 
         try {
-            console.log(JSON.stringify(columns));
-            const response = await fetch("http://localhost:8000/set_data", postRequestOptions);
-            console.log(response.json());
+            await fetch("http://localhost:8000/set_data", postRequestOptions);
         } catch (error) {
             console.error("Error updating columns data:", error);
         }
+        fetchColumns().then();
     }
 
     useEffect(() => {
         fetchColumns().then();
     }, []);
 
-    return { columns, setColumns, saveColumns };
+    return { columns, setColumns, saveColumns, defaultColumnsString };
 }

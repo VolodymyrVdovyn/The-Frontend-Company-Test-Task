@@ -9,6 +9,7 @@ interface IBoardContext {
     addCard: (cardText: string) => void;
     removeCard: (cardId: string) => void;
     updateCard: (cardId: string, cardText: string) => void;
+    isColumnsChanged: () => boolean;
 }
 
 export const BoardContext = createContext<IBoardContext>({
@@ -18,14 +19,19 @@ export const BoardContext = createContext<IBoardContext>({
     addCard: () => {},
     removeCard: () => {},
     updateCard: () => {},
+    isColumnsChanged: () => false,
 });
 
 export const BoardState = ({ children }: { children: React.ReactNode }) => {
-    const { columns, setColumns, saveColumns } = useColumnsApi();
+    const { columns, setColumns, saveColumns, defaultColumnsString } = useColumnsApi();
+
+    const isValidCard = (cardText: string) => {
+        const cardExists = columns.some((column) => column.cards.some((card) => card.id === cardText));
+        return !cardExists && cardText;
+    };
 
     const addCard = (cardText: string) => {
-        const cardExists = columns.some((column) => column.cards.some((card) => card.id === cardText));
-        if (!cardExists && cardText) {
+        if (isValidCard(cardText)) {
             const newColumns = [...columns];
             const todoColumn = newColumns.find((column) => column.id === "todo");
             const newCard = {
@@ -50,23 +56,31 @@ export const BoardState = ({ children }: { children: React.ReactNode }) => {
     };
 
     const updateCard = (cardId: string, cardText: string) => {
-        const newColumns = [...columns];
+        if (isValidCard(cardText)) {
+            const newColumns = [...columns];
 
-        newColumns.forEach((column) => {
-            column.cards = column.cards.map((card) => {
-                if (card.id === cardId) {
-                    return { ...card, id: cardText };
-                } else {
-                    return card;
-                }
+            newColumns.forEach((column) => {
+                column.cards = column.cards.map((card) => {
+                    if (card.id === cardId) {
+                        return { ...card, id: cardText };
+                    } else {
+                        return card;
+                    }
+                });
             });
-        });
 
-        setColumns(newColumns);
+            setColumns(newColumns);
+        }
+    };
+
+    const isColumnsChanged = () => {
+        return JSON.stringify(columns) === defaultColumnsString.current;
     };
 
     return (
-        <BoardContext.Provider value={{ columns, setColumns, saveColumns, addCard, removeCard, updateCard }}>
+        <BoardContext.Provider
+            value={{ columns, setColumns, saveColumns, addCard, removeCard, updateCard, isColumnsChanged }}
+        >
             {children}
         </BoardContext.Provider>
     );
