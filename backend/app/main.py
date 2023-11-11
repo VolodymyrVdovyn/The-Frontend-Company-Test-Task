@@ -1,23 +1,40 @@
-# main.py
-from fastapi import FastAPI
+import json
+
 import redis
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# redis_client = redis.Redis(host="localhost", port=6379, db=0)
-redis_client = redis.Redis(host="redis-server", port=6379, db=0)
-
-# FastAPI endpoint to store data in Redis
-@app.post("/add_data/{key}/{value}")
-def add_data(key: str, value: str):
-    redis_client.set(key, value)
-    return {"message": "Data added successfully"}
+KEY = "the-frontend-company-data"
+redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+# redis_client = redis.Redis(host="redis-server", port=6379, db=0, decode_responses=True)
 
 
-# FastAPI endpoint to retrieve data from Redis
-@app.get("/get_data/{key}")
-def get_data(key: str):
-    value = redis_client.get(key)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+
+
+def init_redis_db():
+    data = [{"id": "todo", "cards": []}, {"id": "doing", "cards": []}, {"id": "done", "cards": []}]
+    redis_client.set(KEY, json.dumps(data))
+    return {"key": KEY, "value": data}
+
+
+@app.get("/get_data")
+def get_data():
+    value: str = redis_client.get(KEY)
     if value is None:
-        return {"message": "Key not found"}
-    return {"key": key, "value": value.decode("utf-8")}
+        return init_redis_db()
+    return {"key": KEY, "value": json.loads(value)}
+
+
+@app.post("/set_data")
+def set_data(body: list[dict]):
+    redis_client.set(KEY, json.dumps(body))
+    return {"message": "Data added successfully"}

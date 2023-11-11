@@ -4,7 +4,7 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useColumnsApi } from "../hooks/columns";
 
 export function Board() {
-    const { columns, setColumns } = useColumnsApi();
+    const { columns, setColumns, saveColumns } = useColumnsApi();
 
     const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return null;
@@ -24,6 +24,9 @@ export function Board() {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
+            <button className="save-button" onClick={saveColumns}>
+                Save
+            </button>
             <div className="board">
                 {columns.map((column) => (
                     <Column column={column} key={column.id} />
