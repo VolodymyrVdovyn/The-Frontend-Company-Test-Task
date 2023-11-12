@@ -10,6 +10,7 @@ interface IBoardContext {
     removeCard: (cardId: string) => void;
     updateCard: (cardId: string, cardText: string) => void;
     isColumnsChanged: () => boolean;
+    sortCardsByDate: () => void;
 }
 
 export const BoardContext = createContext<IBoardContext>({
@@ -20,6 +21,7 @@ export const BoardContext = createContext<IBoardContext>({
     removeCard: () => {},
     updateCard: () => {},
     isColumnsChanged: () => false,
+    sortCardsByDate: () => {},
 });
 
 export const BoardState = ({ children }: { children: React.ReactNode }) => {
@@ -43,6 +45,20 @@ export const BoardState = ({ children }: { children: React.ReactNode }) => {
                 setColumns(newColumns);
             }
         }
+    };
+
+    const sortCardsByDate = () => {
+        const newColumns = [...columns];
+
+        for (const column of newColumns) {
+            column.cards.sort((a, b) => {
+                const dateA = new Date(a.date).getTime();
+                const dateB = new Date(b.date).getTime();
+                return dateB - dateA;
+            });
+        }
+
+        setColumns(newColumns);
     };
 
     const removeCard = (cardId: string) => {
@@ -79,7 +95,16 @@ export const BoardState = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <BoardContext.Provider
-            value={{ columns, setColumns, saveColumns, addCard, removeCard, updateCard, isColumnsChanged }}
+            value={{
+                columns,
+                setColumns,
+                saveColumns,
+                addCard,
+                removeCard,
+                updateCard,
+                isColumnsChanged,
+                sortCardsByDate,
+            }}
         >
             {children}
         </BoardContext.Provider>

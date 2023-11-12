@@ -5,7 +5,7 @@ import { BoardContext } from "../context/BoardContext";
 
 export function Board() {
     const [cardText, setCardText] = useState("");
-    const { columns, setColumns, saveColumns, addCard, isColumnsChanged } = useContext(BoardContext);
+    const { columns, setColumns, saveColumns, addCard, isColumnsChanged, sortCardsByDate } = useContext(BoardContext);
 
     const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return null;
@@ -32,6 +32,9 @@ export function Board() {
                 style={{ backgroundColor: isColumnsChanged() ? "grey" : "green" }}
             >
                 Save
+            </button>
+            <button className="button" onClick={sortCardsByDate} style={{ backgroundColor: "darkgoldenrod" }}>
+                Sort cards by date
             </button>
             <div>
                 <input
