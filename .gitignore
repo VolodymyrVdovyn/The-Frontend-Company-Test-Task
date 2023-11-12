@@ -1,4 +1,4 @@
-## Frontend
+# Frontend
 /frontend/node_modules
 /frontend/.pnp
 .pnp.js
@@ -18,9 +18,12 @@ yarn-debug.log*
 yarn-error.log*
 
 
-## Backend
+# Backend
 /backend/venv
-
+__pycache__
 
 # PyCharm
 .idea
+
+# Redis
+data/dump.rdb
