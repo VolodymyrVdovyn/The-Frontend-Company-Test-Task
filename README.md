@@ -1,7 +1,7 @@
 # For run project local:
 
 ```
-git clone 
+git clone https://github.com/VolodymyrVdovyn/The-Frontend-Company-Test-Task.git
 ```
 
 ```
