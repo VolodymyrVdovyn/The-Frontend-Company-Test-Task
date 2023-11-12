@@ -3,7 +3,7 @@ import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import KEY, init_redis_db, redis_client
+from .database import KEY, init_redis_db, redis_client
 
 app = FastAPI()
 
